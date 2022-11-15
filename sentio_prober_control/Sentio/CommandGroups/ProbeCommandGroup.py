@@ -32,7 +32,7 @@ class ProbeCommandGroup(CommandGroupBase):
         return float(resp.message())
 
     def set_probe_home(self, probe: ProbeSentio, site: ChuckSite = None, x: float = None, y: float = None) -> float:
-        if site == None:
+        if site is None:
             self.__comm.send("set_positioner_home {0}".format(probe.toSentioAbbr()))
         else:
             self.__comm.send(
@@ -47,7 +47,7 @@ class ProbeCommandGroup(CommandGroupBase):
         return float(tok[0]), float(tok[1])
 
     def set_probe_contact(self, probe: ProbeSentio, z: float = None) -> float:
-        if z == None:
+        if z is None:
             self.__comm.send("set_positioner_contact {0}".format(probe.toSentioAbbr()))
         else:
             self.__comm.send("set_positioner_contact {0},{1}".format(probe.toSentioAbbr(), z))

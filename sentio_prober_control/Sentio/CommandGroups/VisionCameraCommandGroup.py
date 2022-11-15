@@ -52,15 +52,10 @@ class VisionCameraCommandGroup(CommandGroupBase):
         return int(tok[0]), int(tok[1])
 
     def is_pattern_trained(self, mp: CameraMountPoint, pat: any) -> bool:
-        if isinstance(pat, DefaultPattern):
-            pattern_name = pat.toSentioAbbr()
-        else:
-            pattern_name = pat
-
-        self._comm.send("vis:pattern:is_trained {}, {}".format(mp.toSentioAbbr(), pattern_name))
+        pattern_name = pat.toSentioAbbr() if isinstance(pat, DefaultPattern) else pat
+        self._comm.send(f"vis:pattern:is_trained {mp.toSentioAbbr()}, {pattern_name}")
         resp = Response.check_resp(self._comm.read_line())
-        is_trained = resp.message() == '1'
-        return is_trained
+        return resp.message() == '1'
 
 #    def is_pattern_trained(self, mp: CameraMountPoint, pat: DefaultPattern) -> bool:
 #        self._comm.send("vis:pattern:is_trained {}, {}".format(mp.toSentioAbbr(), pat.toSentioAbbr()))

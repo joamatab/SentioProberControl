@@ -8,13 +8,15 @@ class CompensationCommandGroup(CommandGroupBase):
         super().__init__(comm)
 
     def set_compensation(self, comp:Compensation, enable:bool):
-        self._comm.send("vis:compensation:enable {},{}".format(comp.toSentioAbbr(), enable))
+        self._comm.send(f"vis:compensation:enable {comp.toSentioAbbr()},{enable}")
         resp = Response.check_resp(self._comm.read_line())
         tok = resp.message().split(",")
         print(resp)
         return tok[0], tok[1]
 
     def execute_compensation(self, comp:ExecuteCompensation, mode:OnTheFlyMode):
-        self._comm.send("vis:compensation:start_execute {},{}".format(comp.toSentioAbbr(), mode.toSentioAbbr()))
-        resp = Response.check_resp(self._comm.read_line())
-        return resp
+        self._comm.send(
+            f"vis:compensation:start_execute {comp.toSentioAbbr()},{mode.toSentioAbbr()}"
+        )
+
+        return Response.check_resp(self._comm.read_line())

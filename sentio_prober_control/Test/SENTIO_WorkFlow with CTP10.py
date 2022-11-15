@@ -31,7 +31,7 @@ def main():
         2: -260,
         3: -520,
         4: -780}
-    for k in range(20):
+    for _ in range(20):
         #1. CTP10 setting
         __CTP10.enable_laser1()
         __CTP10.Clear_Error_queue()
@@ -116,8 +116,7 @@ def main():
 
         #10. Move next die
         die_num = __SENTIO.get_num_dies(DieNumber.Selected)  # Get total dies
-        for i in range(1, int(die_num)):
-
+        for _ in range(1, int(die_num)):
             #10-1. Separation SiPH Probe
             __SENTIO.move_siph_separation('East')
             __SENTIO.move_siph_separation('West')
@@ -182,4 +181,4 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        print(str(e))
+        print(e)

@@ -22,15 +22,13 @@ class StatusCommandGroup(ModuleCommandGroupBase):
         self._comm.send("status:get_chuck_temp")
         resp = Response.check_resp(self._comm.read_line())
         tok = resp.message().split(",")
-        temp = float(tok[0])
-        return temp 
+        return float(tok[0]) 
 
     def get_chuck_temp_setpoint(self) -> float:
         self._comm.send("status:get_chuck_temp_setpoint")
         resp = Response.check_resp(self._comm.read_line())
         tok = resp.message().split(",")
-        temp = float(tok[0])
-        return temp 
+        return float(tok[0]) 
 
     def set_chuck_temp(self, temp:float):
         self._comm.send(f"status:set_chuck_temp {temp:.2f}")
@@ -52,5 +50,4 @@ class StatusCommandGroup(ModuleCommandGroupBase):
     def get_soaking_time(self, temp:float):
         self._comm.send(f"status:get_soaking_time {temp:.2f}")
         resp = Response.check_resp(self._comm.read_line())
-        temp = float(resp.message())
-        return temp
+        return float(resp.message())

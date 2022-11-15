@@ -40,8 +40,7 @@ class WafermapCommandGroup(ModuleCommandGroupBase):
         self._comm.send("map:get_diameter")
         resp = Response.check_resp(self._comm.read_line())
 
-        dia = int(resp.message())
-        return dia
+        return int(resp.message())
 
     def get_grid_origin(self) -> Tuple[int, int]:
         self._comm.send("map:get_grid_origin")
@@ -211,7 +210,7 @@ class WafermapCommandGroup(ModuleCommandGroupBase):
     def step_next_die(self, site: int = None) -> Tuple[int, int, int]:
         # 2021-09-17: bugfix: when no site is given current site must be retained
         if site is None:
-            self._comm.send(f'map:step_next_die')
+            self._comm.send('map:step_next_die')
         else:
             self._comm.send(f'map:step_next_die {site}')
 
@@ -226,7 +225,7 @@ class WafermapCommandGroup(ModuleCommandGroupBase):
         return int(tok[0]), int(tok[1]), int(tok[2])
 
     def step_die_seq(self, seq: int, site: int) -> Tuple[int, int, int]:
-        self._comm.send("map:step_die_seq {}, {}".format(seq, site))
+        self._comm.send(f"map:step_die_seq {seq}, {site}")
         resp = Response.check_resp(self._comm.read_line())
         tok = resp.message().split(",")
 
@@ -240,7 +239,7 @@ class WafermapCommandGroup(ModuleCommandGroupBase):
         return self.__end_of_routeecute
 
     def execute_topogrphy(self, execute:ExecuteAction):
-        self._comm.send("map:compensation:topography {}".format(execute.toSentioAbbr()))
+        self._comm.send(f"map:compensation:topography {execute.toSentioAbbr()}")
         resp = Response.check_resp(self._comm.read_line())
         # i.e. Stepping while at the end of the route
         if not resp.ok():

@@ -29,7 +29,7 @@ class WafermapSubsiteGroup(CommandGroupBase):
 
     """ Add a single subsite to the wafermap """
     def add(self, id: str, x: float, y: float, orient: AxisOrient = AxisOrient.UpRight):
-        self._comm.send("map:subsite:add {}, {}, {}, {}".format(id, x, y, orient.toSentioAbbr()))
+        self._comm.send(f"map:subsite:add {id}, {x}, {y}, {orient.toSentioAbbr()}")
         Response.check_resp(self._comm.read_line())
 
     def step_next(self):
