@@ -116,7 +116,7 @@ def main():
         selected_poi = [ 'poi_1', 'poi_5', 'poi_9']
         while True:
             # Variant 1: Step over all POI (comment Variant 2 to us this)
-            selected_poi = range(0, num_poi)
+            selected_poi = range(num_poi)
 
             # Variant 2: Step over all POI
             #selected_poi = [ 'poi_1', 'poi_5', 'poi_9']

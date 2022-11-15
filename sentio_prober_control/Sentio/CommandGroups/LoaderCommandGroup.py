@@ -7,7 +7,7 @@ class LoaderCommandGroup(CommandGroupBase):
         super().__init__(comm)
 
     def start_prepare_station(self, station: LoaderStation, angle: float = None) -> Response:
-        if (angle==None):
+        if angle is None:
             self._comm.send("loader:start_prepare_station {0}".format(station.toSentioAbbr()))
         else:
             self._comm.send("loader:start_prepare_station {0}, {1}".format(station.toSentioAbbr(), angle))

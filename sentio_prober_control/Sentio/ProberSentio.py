@@ -43,15 +43,14 @@ class SentioProber(ProberBase):
 
     def query_command_status(self, cmd_id: int) -> Tuple[Response, int]:
         self.comm.send("query_command_status {0}".format(cmd_id))
-        resp = Response.parse_resp(self.comm.read_line())
-        return resp
+        return Response.parse_resp(self.comm.read_line())
 
     def open_project(self, project: str, restore_heights: bool = False):
         self.comm.send(f"open_project {project}, {restore_heights}")
         Response.check_resp(self.comm.read_line())
 
     def save_project(self, project: str):
-        self.comm.send("save_project " + project)
+        self.comm.send(f"save_project {project}")
         Response.check_resp(self.comm.read_line())
 
     def save_config(self):
@@ -162,7 +161,8 @@ class SentioProber(ProberBase):
         Example: set_chuck_site_height(ChuckSite.Wafer,1000,800,20,5)\n
         Sets for chuck site “Wafer” contact height=1000 µm, separation heights=800 µm ,overtravel gap=20 µm and hover height=50 µm
         """
-        par: str = "{},{},{},{},{}".format(site.toSentioAbbr(), contact, separation, overtravel_gap, hover_gap)
+        par: str = f"{site.toSentioAbbr()},{contact},{separation},{overtravel_gap},{hover_gap}"
+
         self.comm.send("set_chuck_site_heights {0}".format(par))
         Response.check_resp(self.comm.read_line())
 
@@ -200,7 +200,7 @@ class SentioProber(ProberBase):
         }
 
         str_module = switcher.get(module, "Invalid Module")
-        self.comm.send("select_module " + str_module)
+        self.comm.send(f"select_module {str_module}")
         Response.check_resp(self.comm.read_line())
 
     # Wait until all async commands have finished.

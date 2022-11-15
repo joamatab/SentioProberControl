@@ -26,7 +26,7 @@ class VisionCommandGroup(ModuleCommandGroupBase):
     # Note: Multiple patterns may be returned i'm only using the best one here
     def find_pattern(self, name: str, threshold: float = 70, pattern_index: int = 0, reference: FindPatternReference = FindPatternReference.CenterOfRoi, can_fail_detection: bool = False):
         self._comm.send("vis:find_pattern {0}, {1}, {2}, {3}".format(name, threshold, pattern_index, reference.toSentioAbbr()))
-        if can_fail_detection == False:
+        if not can_fail_detection:
             resp = Response.check_resp(self._comm.read_line())
             tok = resp.message().split(",")
             return float(tok[0]), float(tok[1]), float(tok[2]), float(tok[3])
@@ -36,7 +36,7 @@ class VisionCommandGroup(ModuleCommandGroupBase):
                 ret = resp.errc()
                 return float(ret), resp.message()
             except Exception as e:
-                print(str(e))
+                print(e)
 
     def remove_probetip_marker(self):
         self._comm.send("vis:remove_probetip_marker")
@@ -48,7 +48,7 @@ class VisionCommandGroup(ModuleCommandGroupBase):
         str_tips = resp.message().split(",")
 
         found_tips = []
-        for n in range(0, len(str_tips)):
+        for n in range(len(str_tips)):
             str_tip = str_tips[n].strip().split(" ")
             x = float(str_tip[0])  # tip x position
             y = float(str_tip[1])  # tip y position
@@ -104,11 +104,11 @@ class VisionCommandGroup(ModuleCommandGroupBase):
         return float(tok[0]), float(tok[1]), float(tok[2])
 
     def has_camera(self, camera: CameraMountPoint) -> bool:
-        self._comm.send("vis:has_camera {}".format(camera.toSentioAbbr()))
+        self._comm.send(f"vis:has_camera {camera.toSentioAbbr()}")
         resp = Response.check_resp(self._comm.read_line())
         return resp.message().upper()=="1"
 
-    def create_probepad_model(self, angleStep: float = 0.1, imgPath: str = None, UL:tuple=None, LR:tuple=None):  
+    def create_probepad_model(self, angleStep: float = 0.1, imgPath: str = None, UL:tuple=None, LR:tuple=None):
         '''
         Creare probe pad model for NCC to matching pad from wafer. 
         
@@ -117,7 +117,7 @@ class VisionCommandGroup(ModuleCommandGroupBase):
         else 
             create pad model from image file 
         '''        
-        if(imgPath==None):
+        if imgPath is None:
             self._comm.send("vis:create_probepad_model {0}".format(angleStep))
         else:            
             self._comm.send("vis:create_probepad_model {0},{1},{2},{3},{4},{5}".format(angleStep,imgPath, UL[0],  UL[1], LR[0], LR[1]))
@@ -126,7 +126,7 @@ class VisionCommandGroup(ModuleCommandGroupBase):
         print(resp)
         return tok 
 
-    def detect_probepads(self, imgPath: str = None, minScore:float=0.7, startAngle:float=None, startExtend:float=None,maxOverlap:float=None): 
+    def detect_probepads(self, imgPath: str = None, minScore:float=0.7, startAngle:float=None, startExtend:float=None,maxOverlap:float=None):
         '''
         Execute pad pattern match with NCC 
 
@@ -138,10 +138,13 @@ class VisionCommandGroup(ModuleCommandGroupBase):
         
         maxOverlap is how long should it remove duplicate points.  
         '''   
-        if(startAngle==None):
-            self._comm.send("vis:detect_probepads {},{}".format(imgPath, minScore))
-        else:            
-            self._comm.send("vis:detect_probepads {},{},{},{},{}".format(imgPath, minScore, startAngle,  startExtend, maxOverlap))
+        if startAngle is None:
+            self._comm.send(f"vis:detect_probepads {imgPath},{minScore}")
+        else:        
+            self._comm.send(
+                f"vis:detect_probepads {imgPath},{minScore},{startAngle},{startExtend},{maxOverlap}"
+            )
+
         resp = Response.check_resp(self._comm.read_line())
         tok = resp.message().split(",")
         print(resp)

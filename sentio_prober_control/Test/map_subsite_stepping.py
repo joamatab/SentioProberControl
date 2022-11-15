@@ -61,7 +61,7 @@ def main():
 
         num_sites = prober.map.subsites.get_num()
 
-        for testSite in range(0,num_sites):
+        for testSite in range(num_sites):
             col, row, site = prober.map.step_first_die(testSite)  # <- SUBSITE SELECTED HERE!
             print("Position {0}, {1} (Site: {2})".format(col, row, site))
 

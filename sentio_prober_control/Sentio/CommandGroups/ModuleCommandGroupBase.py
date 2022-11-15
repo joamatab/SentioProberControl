@@ -9,7 +9,7 @@ class ModuleCommandGroupBase(CommandGroupBase):
         self._groupAbbr = abbr
 
     def get_prop(self, prop_name: str, arg1=None):
-        if arg1 == None:
+        if arg1 is None:
             self._comm.send("{0}:get_prop {1}".format(self._groupAbbr, prop_name))
         else:
             self._comm.send("{0}:get_prop {1}, {2}".format(self._groupAbbr,prop_name, arg1))
@@ -22,15 +22,11 @@ class ModuleCommandGroupBase(CommandGroupBase):
         if (len(values) == 1):
             # Test 1: Check if the returned value is a boolean. Do not use bool(...) because this
             #         would also convert numeric values
-            if resp.message().lower()=='true' or resp.message().lower()=='false':
-                val = bool(resp.message())
-                return val
-
+            if resp.message().lower() in ['true', 'false']:
+                return bool(resp.message())
             # Test 2: Try to convert the return value into a number
             try:
-                # I cannot distinguish between int and float reliably. Values will always be returned as floats
-                val = float(resp.message())
-                return val
+                return float(resp.message())
             except:
                 return resp.message()
         elif len(values) == 2:
@@ -42,7 +38,7 @@ class ModuleCommandGroupBase(CommandGroupBase):
 
     def set_prop(self, prop_name: str, *argv):
         cmd: str = self._groupAbbr + ':set_prop {0}'
-        for n in range(0, len(argv)):
+        for n in range(len(argv)):
             cmd += ', {0}'.format(argv[n])
 
         self._comm.send(cmd.format(prop_name))

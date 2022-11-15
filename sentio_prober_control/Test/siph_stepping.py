@@ -59,7 +59,7 @@ def main():
         #---Measurement---#
 
     die_num = prober.map.get_num_dies(DieNumber.Selected)  # Get total dies
-    for i in range(1, int(die_num)):
+    for _ in range(1, int(die_num)):
         prober.siph.move_separation(ProbeSentio.East)
         prober.siph.move_separation(ProbeSentio.West)
 
